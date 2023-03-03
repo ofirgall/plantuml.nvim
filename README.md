@@ -51,8 +51,11 @@ require("id3").setup({ renderer = 'text' })
 
 ## Usage
 
-Open any file with the `.puml` extension and then write it. A new window will be
-opened with the resulting diagram.
+Open any file with the `.puml` extension and then write it. A new window will be opened with the
+resulting diagram.
+
+Alternatively, the `PlantUML` command can be run. It will only render files with the `.puml`
+extension.
 
 ## Contributing
 

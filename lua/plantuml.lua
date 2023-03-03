@@ -32,6 +32,15 @@ local function create_autocmd(group, renderer)
     })
 end
 
+local function create_user_command(renderer)
+  vim.api.nvim_create_user_command('PlantUMLRun', function (_)
+    local file = vim.api.nvim_buf_get_name(0)
+    if file:find('^(.+).puml$') then
+      renderer:render(file)
+    end
+  end, {})
+end
+
 function M.setup(config)
   local _config = { renderer = 'imv' }
   merge_config(_config, config or {})
@@ -41,6 +50,7 @@ function M.setup(config)
   local renderer = create_renderer(_config.renderer)
   if renderer then
     create_autocmd(group, renderer)
+    create_user_command(renderer)
   end
 end
 
