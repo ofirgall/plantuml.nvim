@@ -6,7 +6,7 @@ M.Renderer = {}
 
 function M.Renderer:new()
   local buf = vim.api.nvim_create_buf(false, true)
-  assert(buf ~= 0, string.format('[plantuml.nvim] Failed to create buffer'))
+  assert(buf ~= 0, string.format('create buffer'))
 
   self.__index = self
   return setmetatable({ buf = buf, win = nil }, self)

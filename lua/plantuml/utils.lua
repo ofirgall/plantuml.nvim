@@ -39,12 +39,12 @@ end
 function M.Command:_check_exit_code(code)
   if code ~= 0 then
     local msg = table.concat(self.stderr)
-    print(string.format('[plantuml.nvim] Failed to execute "%s"\n%s\ncode: %d', self.command, msg, code))
+    print(string.format('[plantuml.nvim] Failed to execute command "%s"\n%s\ncode: %d', self.command, msg, code))
   end
 end
 
 function M.Command:_assert_valid_job_id(id)
-  assert(id > 0, string.format('[plantuml.nvim] Failed to start job "%s"', self.command))
+  assert(id > 0, string.format('start job for command "%s"', self.command))
 end
 
 return M

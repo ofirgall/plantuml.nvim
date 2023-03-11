@@ -9,6 +9,13 @@ local function merge_config(dst, src)
   end
 end
 
+local function render_file(renderer, file)
+  local status, result = pcall(renderer.render, renderer, file)
+  if not status then
+    print(string.format('[plantuml.nvim] Failed to render file "%s"\n%s', file, result))
+  end
+end
+
 local function create_renderer(type)
   local renderer
   if type == 'text' then
@@ -16,7 +23,7 @@ local function create_renderer(type)
   elseif type == 'imv' then
     renderer = imv.Renderer:new()
   else
-    print(string.format('[plantuml.nvim] Invalid renderer type: %s', type))
+    print(string.format('[plantuml.nvim] Invalid renderer type "%s"', type))
   end
 
   return renderer
@@ -26,7 +33,7 @@ local function create_autocmd(group, renderer)
     vim.api.nvim_create_autocmd('BufWritePost', {
       pattern = '*.puml',
       callback = function(args)
-        renderer:render(args.file)
+        render_file(renderer, args.file)
       end,
       group = group,
     })
@@ -36,7 +43,7 @@ local function create_user_command(renderer)
   vim.api.nvim_create_user_command('PlantUMLRun', function (_)
     local file = vim.api.nvim_buf_get_name(0)
     if file:find('^(.+).puml$') then
-      renderer:render(file)
+      render_file(renderer, file)
     end
   end, {})
 end
