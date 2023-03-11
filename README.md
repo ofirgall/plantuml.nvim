@@ -32,7 +32,7 @@ sudo pacman -S plantuml imv
 To use the default configuration, do:
 
 ```lua
-require("plantuml").setup()
+require('plantuml').setup()
 ```
 
 The default values are:
@@ -46,7 +46,7 @@ local _config = {
 Alternatively, you can change some of the settings:
 
 ```lua
-require("id3").setup({ renderer = 'text' })
+require('plantuml').setup({ renderer = 'text' })
 ```
 
 ## Usage
