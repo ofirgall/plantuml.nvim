@@ -1,5 +1,5 @@
-local text = require('plantuml.text')
 local imv = require('plantuml.imv')
+local text = require('plantuml.text')
 
 local M = {}
 
@@ -30,17 +30,17 @@ local function create_renderer(type)
 end
 
 local function create_autocmd(group, renderer)
-    vim.api.nvim_create_autocmd('BufWritePost', {
-      pattern = '*.puml',
-      callback = function(args)
-        render_file(renderer, args.file)
-      end,
-      group = group,
-    })
+  vim.api.nvim_create_autocmd('BufWritePost', {
+    pattern = '*.puml',
+    callback = function(args)
+      render_file(renderer, args.file)
+    end,
+    group = group,
+  })
 end
 
 local function create_user_command(renderer)
-  vim.api.nvim_create_user_command('PlantUMLRun', function (_)
+  vim.api.nvim_create_user_command('PlantUMLRun', function(_)
     local file = vim.api.nvim_buf_get_name(0)
     if file:find('^(.+).puml$') then
       render_file(renderer, file)
