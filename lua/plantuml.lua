@@ -1,3 +1,4 @@
+local feh = require('plantuml.feh')
 local imv = require('plantuml.imv')
 local text = require('plantuml.text')
 
@@ -22,6 +23,8 @@ local function create_renderer(type)
     renderer = text.Renderer:new()
   elseif type == 'imv' then
     renderer = imv.Renderer:new()
+  elseif type == 'feh' then
+    renderer = feh.Renderer:new()
   else
     print(string.format('[plantuml.nvim] Invalid renderer type "%s"', type))
   end

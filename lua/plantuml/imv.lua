@@ -10,6 +10,8 @@ function M.Renderer:new()
 end
 
 function M.Renderer:render(file)
+  -- We must run imv as a server because imv cannot handle file changes properly.
+  -- See: https://todo.sr.ht/~exec64/imv/45
   self:_start_server()
   self:_refresh_image(file)
 end

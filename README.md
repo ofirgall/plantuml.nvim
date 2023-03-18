@@ -5,7 +5,8 @@ This Neovim plugin allows using [PlantUML](https://plantuml.com/) to render diag
 This plugin supports different renderers to display PlantUML's output. Currently,
 the following renderers are implemented:
 - **text** renderer: An ASCII art renderer using PlantUML's text output.
-- **imv** renderer: Using the `imv` image viewer.
+- **imv** renderer: Using the [imv](https://sr.ht/~exec64/imv/) image viewer.
+- **feh** renderer: Using the [feh](https://feh.finalrewind.org/) image viewer.
 
 ## Installation
 
@@ -17,14 +18,14 @@ use { 'https://gitlab.com/itaranto/plantuml.nvim', tag = '*' }
 
 ## Dependencies
 
-To use this plugin, you'll need PlantUML installed. If using the **imv** renderer, you'll need to
-have [imv](https://sr.ht/~exec64/imv/) as well.
+To use this plugin, you'll need PlantUML installed. If using any of the external renderers, you'll
+need to have them installed as well.
 
 You should be able to install any of these with your system's package manager, for example, on Arch
 Linux:
 
 ```sh
-sudo pacman -S plantuml imv
+sudo pacman -S plantuml imv feh
 ```
 
 ## Configuration
