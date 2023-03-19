@@ -11,7 +11,7 @@ end
 
 function M.Renderer:render(file)
   local puml_cmd = string.format('plantuml -darkmode -pipe < %s > %s', file, self.tmp_file)
-  utils.Command:new(puml_cmd):start(function()
+  utils.run_command(puml_cmd, nil, function(_)
     self:_start_viewer()
   end)
 end
@@ -19,7 +19,8 @@ end
 function M.Renderer:_start_viewer()
   -- Only start feh if it wasn't already started.
   if not self.started then
-    utils.Command:new(string.format('feh %s', self.tmp_file)):start(function(_)
+    local feh_cmd = string.format('feh %s', self.tmp_file)
+    utils.run_command(feh_cmd, function()
       self.started = false
     end)
     self.started = true
