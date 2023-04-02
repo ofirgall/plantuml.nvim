@@ -4,12 +4,12 @@ local M = {}
 
 M.Renderer = {}
 
-function M.Renderer:new()
+function M.Renderer:new(options)
   local buf = vim.api.nvim_create_buf(false, true)
   assert(buf ~= 0, string.format('create buffer'))
 
   self.__index = self
-  return setmetatable({ buf = buf, win = nil }, self)
+  return setmetatable({ buf = buf, win = nil, split_cmd = options.split_cmd }, self)
 end
 
 function M.Renderer:render(file)
@@ -27,7 +27,7 @@ end
 function M.Renderer:_create_split()
   -- Only create the window if it wasn't already created.
   if not (self.win and vim.api.nvim_win_is_valid(self.win)) then
-    vim.cmd('split')
+    vim.cmd(self.split_cmd)
     self.win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_buf(self.win, self.buf)
   end

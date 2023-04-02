@@ -5,9 +5,7 @@ local text = require('plantuml.text')
 local M = {}
 
 local function merge_config(dst, src)
-  for key, value in pairs(src) do
-    dst[key] = value
-  end
+  return vim.tbl_extend('force', dst, src or {})
 end
 
 local function render_file(renderer, file)
@@ -17,10 +15,13 @@ local function render_file(renderer, file)
   end
 end
 
-local function create_renderer(type)
+local function create_renderer(renderer_config)
+  local type = renderer_config.type
+  local options = renderer_config.options
+
   local renderer
   if type == 'text' then
-    renderer = text.Renderer:new()
+    renderer = text.Renderer:new(options or { split_cmd = 'vsplit' })
   elseif type == 'imv' then
     renderer = imv.Renderer:new()
   elseif type == 'feh' then
@@ -52,12 +53,17 @@ local function create_user_command(renderer)
 end
 
 function M.setup(config)
-  local _config = { renderer = 'imv' }
-  merge_config(_config, config or {})
+  local default_config = {
+    renderer = {
+      type = 'imv',
+    },
+  }
+
+  config = merge_config(default_config, config)
 
   local group = vim.api.nvim_create_augroup('PlantUMLGroup', {})
 
-  local renderer = create_renderer(_config.renderer)
+  local renderer = create_renderer(config.renderer)
   if renderer then
     create_autocmd(group, renderer)
     create_user_command(renderer)

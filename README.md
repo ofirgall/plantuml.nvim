@@ -39,15 +39,24 @@ require('plantuml').setup()
 The default values are:
 
 ```lua
-local _config = {
-  renderer = 'imv',
+local default_config = {
+  renderer = {
+    type = 'imv',
+  },
 }
 ```
 
 Alternatively, you can change some of the settings:
 
 ```lua
-require('plantuml').setup({ renderer = 'text' })
+require('plantuml').setup({
+  renderer = {
+    type = 'text',
+    options = {
+      split_cmd = 'split',
+    },
+  },
+})
 ```
 
 ## Usage
