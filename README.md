@@ -61,11 +61,19 @@ require('plantuml').setup({
 
 ## Usage
 
-Open any file with the `.puml` extension and then write it. A new window will be opened with the
-resulting diagram.
+Open a file with a supported extension and then write it. A new window will be opened
+with the resulting diagram.
 
-Alternatively, the `PlantUML` command can be run. It will only render files with the `.puml`
+Alternatively, the `PlantUML` command can be run. It will only render files with a supported
 extension.
+
+The supported file extensions are:
+
+- `.iuml`
+- `.plantuml`
+- `.pu`
+- `.puml`
+- `.wsd`
 
 ## Contributing
 

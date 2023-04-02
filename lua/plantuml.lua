@@ -35,7 +35,7 @@ end
 
 local function create_autocmd(group, renderer)
   vim.api.nvim_create_autocmd('BufWritePost', {
-    pattern = '*.puml',
+    pattern = { '*.iuml', '*.plantuml', '*.pu', '*.puml', '*.wsd' },
     callback = function(args)
       render_file(renderer, args.file)
     end,
@@ -44,9 +44,19 @@ local function create_autocmd(group, renderer)
 end
 
 local function create_user_command(renderer)
+  local function match_extension(file, ext)
+    return file:find(string.format('^(.+).%s$', ext))
+  end
+
   vim.api.nvim_create_user_command('PlantUMLRun', function(_)
     local file = vim.api.nvim_buf_get_name(0)
-    if file:find('^(.+).puml$') then
+    if
+      match_extension(file, 'iuml')
+      or match_extension(file, 'plantuml')
+      or match_extension(file, 'pu')
+      or match_extension(file, 'puml')
+      or match_extension(file, 'wsd')
+    then
       render_file(renderer, file)
     end
   end, {})
