@@ -13,8 +13,11 @@ function M.Renderer:new(options)
 end
 
 function M.Renderer:render(file)
-  local puml_cmd = string.format('plantuml -pipe -tutxt < %s', file)
-  utils.run_command(puml_cmd, nil, function(output)
+  local puml_runner = utils.Runner:new(
+    string.format('plantuml -pipe -tutxt < %s', file),
+    { [0] = true, [200] = true }
+  )
+  puml_runner:run(function(output)
     self:_write_output(output)
     self:_create_split()
   end)

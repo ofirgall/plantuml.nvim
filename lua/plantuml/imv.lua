@@ -20,22 +20,26 @@ function M.Renderer:_start_server()
   -- Use imv server's PID to check if it already has started:
   -- Set the PID the first time imv starts and only clear it when it exits.
   if self.pid == 0 then
-    self.pid = utils.run_command('imv', function()
+    self.pid = utils.Runner:new('imv', {}):run(function(_)
       self.pid = 0
     end)
   end
 end
 
 function M.Renderer:_refresh_image(file)
+  local puml_runner = utils.Runner:new(
+    string.format('plantuml -darkmode -pipe < %s > %s', file, self.tmp_file),
+    { [0] = true, [200] = true }
+  )
+
   -- 1. Run PlantUML to generate an image file from the current file.
-  local puml_cmd = string.format('plantuml -darkmode -pipe < %s > %s', file, self.tmp_file)
-  utils.run_command(puml_cmd, nil, function(_)
+  puml_runner:run(function(_)
     -- 2. Tell imv to close all previously opened files.
     local imv_close_cmd = string.format('imv-msg %d close all', self.pid)
-    utils.run_command(imv_close_cmd, nil, function(_)
+    utils.Runner:new(imv_close_cmd):run(function(_)
       -- 3. Tell imv to open the file we want.
       local imv_open_cmd = string.format('imv-msg %d open %s', self.pid, self.tmp_file)
-      utils.run_command(imv_open_cmd)
+      utils.Runner:new(imv_open_cmd):run()
     end)
   end)
 end
