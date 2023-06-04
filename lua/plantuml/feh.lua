@@ -1,20 +1,23 @@
+local plantuml = require('plantuml.plantuml')
 local utils = require('plantuml.utils')
 
 local M = {}
 
 M.Renderer = {}
 
-function M.Renderer:new()
+function M.Renderer:new(options)
+  options = options or { dark_mode = true }
+
   self.__index = self
-  return setmetatable({ tmp_file = vim.fn.tempname(), started = false }, self)
+  return setmetatable({
+    tmp_file = vim.fn.tempname(),
+    started = false,
+    dark_mode = options.dark_mode,
+  }, self)
 end
 
 function M.Renderer:render(file)
-  local puml_runner = utils.Runner:new(
-    string.format('plantuml -darkmode -pipe < %s > %s', file, self.tmp_file),
-    { [0] = true, [200] = true }
-  )
-  puml_runner:run(function(_)
+  plantuml.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
     self:_start_viewer()
   end)
 end

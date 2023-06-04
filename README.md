@@ -48,6 +48,21 @@ local default_config = {
 
 Alternatively, you can change some of the settings:
 
+For image renderers:
+
+```lua
+require('plantuml').setup({
+  renderer = {
+    type = 'imv',
+    options = {
+      dark_mode = false,
+    },
+  },
+})
+```
+
+And for the text renderer:
+
 ```lua
 require('plantuml').setup({
   renderer = {

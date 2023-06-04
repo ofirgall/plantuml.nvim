@@ -21,11 +21,11 @@ local function create_renderer(renderer_config)
 
   local renderer
   if type == 'text' then
-    renderer = text.Renderer:new(options or { split_cmd = 'vsplit' })
+    renderer = text.Renderer:new(options)
   elseif type == 'imv' then
-    renderer = imv.Renderer:new()
+    renderer = imv.Renderer:new(options)
   elseif type == 'feh' then
-    renderer = feh.Renderer:new()
+    renderer = feh.Renderer:new(options)
   else
     print(string.format('[plantuml.nvim] Invalid renderer type "%s"', type))
   end

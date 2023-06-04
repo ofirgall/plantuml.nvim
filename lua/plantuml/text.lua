@@ -1,10 +1,12 @@
-local utils = require('plantuml.utils')
+local plantuml = require('plantuml.plantuml')
 
 local M = {}
 
 M.Renderer = {}
 
 function M.Renderer:new(options)
+  options = options or { split_cmd = 'vsplit' }
+
   local buf = vim.api.nvim_create_buf(false, true)
   assert(buf ~= 0, string.format('create buffer'))
 
@@ -13,11 +15,7 @@ function M.Renderer:new(options)
 end
 
 function M.Renderer:render(file)
-  local puml_runner = utils.Runner:new(
-    string.format('plantuml -pipe -tutxt < %s', file),
-    { [0] = true, [200] = true }
-  )
-  puml_runner:run(function(output)
+  plantuml.create_text_runner(file):run(function(output)
     self:_write_output(output)
     self:_create_split()
   end)

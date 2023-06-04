@@ -1,12 +1,19 @@
+local plantuml = require('plantuml.plantuml')
 local utils = require('plantuml.utils')
 
 local M = {}
 
 M.Renderer = {}
 
-function M.Renderer:new()
+function M.Renderer:new(options)
+  options = options or { dark_mode = true }
+
   self.__index = self
-  return setmetatable({ tmp_file = vim.fn.tempname(), pid = 0 }, self)
+  return setmetatable({
+    tmp_file = vim.fn.tempname(),
+    pid = 0,
+    dark_mode = options.dark_mode,
+  }, self)
 end
 
 function M.Renderer:render(file)
@@ -27,13 +34,8 @@ function M.Renderer:_start_server()
 end
 
 function M.Renderer:_refresh_image(file)
-  local puml_runner = utils.Runner:new(
-    string.format('plantuml -darkmode -pipe < %s > %s', file, self.tmp_file),
-    { [0] = true, [200] = true }
-  )
-
   -- 1. Run PlantUML to generate an image file from the current file.
-  puml_runner:run(function(_)
+  plantuml.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
     -- 2. Tell imv to close all previously opened files.
     local imv_close_cmd = string.format('imv-msg %d close all', self.pid)
     utils.Runner:new(imv_close_cmd):run(function(_)
