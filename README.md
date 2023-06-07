@@ -2,6 +2,8 @@
 
 This Neovim plugin allows using [PlantUML](https://plantuml.com/) to render diagrams in real time.
 
+![](./assets/screenshot.webp)
+
 This plugin supports different renderers to display PlantUML's output. Currently,
 the following renderers are implemented:
 - **text** renderer: An ASCII art renderer using PlantUML's text output.
