@@ -12,6 +12,16 @@ the following renderers are implemented:
 
 ## Installation
 
+Install with [lazy.nvim](https://github.com/folke/lazy.nvim):
+
+```lua
+{
+  'https://gitlab.com/itaranto/plantuml.nvim',
+  version = '*',
+  config = function() require('plantuml').setup() end,
+}
+```
+
 Install with [packer](https://github.com/wbthomason/packer.nvim):
 
 ```lua
