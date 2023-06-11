@@ -6,9 +6,13 @@ This Neovim plugin allows using [PlantUML](https://plantuml.com/) to render diag
 
 This plugin supports different renderers to display PlantUML's output. Currently,
 the following renderers are implemented:
-- **text** renderer: An ASCII art renderer using PlantUML's text output.
-- **imv** renderer: Using the [imv](https://sr.ht/~exec64/imv/) image viewer.
-- **feh** renderer: Using the [feh](https://feh.finalrewind.org/) image viewer.
+- **text**: An ASCII art renderer using PlantUML's text output.
+- **image**: A generic image render.  
+  It runs the provided image viewer program with the generated image as an argument.  
+  Best suited for viewers that support auto-reloading like: *feh*, *nsxiv*, *sxiv*, etc.
+- **imv**: Uses the [imv](https://sr.ht/~exec64/imv/) image viewer.  
+  This needs its separate renderer to work around an [issue](https://todo.sr.ht/~exec64/imv/45) with
+  auto-reloading.
 
 ## Installation
 
@@ -55,39 +59,43 @@ require('plantuml').setup()
 The default values are:
 
 ```lua
-local default_config = {
+{
   renderer = {
-    type = 'imv',
+    type = 'text',
+    options = {
+      split_cmd = 'vsplit', -- Allowed values: `split`, `vsplit`.
+    }
   },
 }
 ```
 
-Alternatively, you can change some of the settings:
+To use other renderers, change the `type` property.
 
-For image renderers:
+Defaults for the *image* renderer:
 
 ```lua
-require('plantuml').setup({
+{
+  renderer = {
+    type = 'image',
+    options = {
+      prog = 'feh',
+      dark_mode = true,
+    }
+  },
+}
+```
+
+Defaults for the *imv* renderer:
+
+```lua
+{
   renderer = {
     type = 'imv',
     options = {
-      dark_mode = false,
-    },
+      dark_mode = true,
+    }
   },
-})
-```
-
-And for the text renderer:
-
-```lua
-require('plantuml').setup({
-  renderer = {
-    type = 'text',
-    options = {
-      split_cmd = 'split',
-    },
-  },
-})
+}
 ```
 
 ## Usage

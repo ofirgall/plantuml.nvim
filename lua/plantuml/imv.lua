@@ -10,9 +10,9 @@ function M.Renderer:new(options)
 
   self.__index = self
   return setmetatable({
+    dark_mode = options.dark_mode,
     tmp_file = vim.fn.tempname(),
     pid = 0,
-    dark_mode = options.dark_mode,
   }, self)
 end
 

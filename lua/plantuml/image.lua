@@ -6,13 +6,14 @@ local M = {}
 M.Renderer = {}
 
 function M.Renderer:new(options)
-  options = options or { dark_mode = true }
+  options = options or { prog = 'feh', dark_mode = true }
 
   self.__index = self
   return setmetatable({
+    prog = options.prog,
+    dark_mode = options.dark_mode,
     tmp_file = vim.fn.tempname(),
     started = false,
-    dark_mode = options.dark_mode,
   }, self)
 end
 
@@ -25,8 +26,8 @@ end
 function M.Renderer:_start_viewer()
   -- Only start feh if it wasn't already started.
   if not self.started then
-    local feh_cmd = string.format('feh %s', self.tmp_file)
-    utils.Runner:new(feh_cmd, {}):run(function(_)
+    local cmd = string.format('%s %s', self.prog, self.tmp_file)
+    utils.Runner:new(cmd, {}):run(function(_)
       self.started = false
     end)
     self.started = true
