@@ -6,7 +6,7 @@ local M = {}
 M.Renderer = {}
 
 function M.Renderer:new(options)
-  options = options or { prog = 'feh', dark_mode = true }
+  options = utils.merge_tables({ prog = 'feh', dark_mode = true }, options)
 
   self.__index = self
   return setmetatable({

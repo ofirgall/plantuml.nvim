@@ -1,12 +1,9 @@
 local image = require('plantuml.image')
 local imv = require('plantuml.imv')
 local text = require('plantuml.text')
+local utils = require('plantuml.utils')
 
 local M = {}
-
-local function merge_config(dst, src)
-  return vim.tbl_extend('force', dst, src or {})
-end
 
 local function render_file(renderer, file)
   local status, result = pcall(renderer.render, renderer, file)
@@ -69,7 +66,7 @@ function M.setup(config)
     },
   }
 
-  config = merge_config(default_config, config)
+  config = utils.merge_tables(default_config, config)
 
   local group = vim.api.nvim_create_augroup('PlantUMLGroup', {})
 

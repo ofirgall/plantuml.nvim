@@ -1,11 +1,12 @@
 local plantuml = require('plantuml.plantuml')
+local utils = require('plantuml.utils')
 
 local M = {}
 
 M.Renderer = {}
 
 function M.Renderer:new(options)
-  options = options or { split_cmd = 'vsplit' }
+  options = utils.merge_tables({ split_cmd = 'vsplit' }, options)
 
   local buf = vim.api.nvim_create_buf(false, true)
   assert(buf ~= 0, string.format('create buffer'))

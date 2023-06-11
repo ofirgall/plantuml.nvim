@@ -1,5 +1,9 @@
 local M = {}
 
+function M.merge_tables(dst, src)
+  return vim.tbl_extend('force', dst, src or {})
+end
+
 M.Runner = {}
 
 function M.Runner:new(cmd, codes)
