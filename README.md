@@ -25,7 +25,11 @@ Install with [lazy.nvim](https://github.com/folke/lazy.nvim):
 Install with [packer](https://github.com/wbthomason/packer.nvim):
 
 ```lua
-use { 'https://gitlab.com/itaranto/plantuml.nvim', tag = '*' }
+use {
+  'https://gitlab.com/itaranto/plantuml.nvim',
+  tag = '*',
+  config = function() require('plantuml').setup() end
+}
 ```
 
 ## Dependencies
