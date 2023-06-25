@@ -5,6 +5,14 @@ local utils = require('plantuml.utils')
 
 local M = {}
 
+local file_extensions = {
+  'iuml',
+  'plantuml',
+  'pu',
+  'puml',
+  'wsd',
+}
+
 local function render_file(renderer, file)
   local status, result = pcall(renderer.render, renderer, file)
   if not status then
@@ -31,30 +39,29 @@ local function create_renderer(renderer_config)
 end
 
 local function create_autocmd(group, renderer)
+  local pattern = {}
+  for _, ext in ipairs(file_extensions) do
+    table.insert(pattern, '*' .. ext)
+  end
+
   vim.api.nvim_create_autocmd('BufWritePost', {
-    pattern = { '*.iuml', '*.plantuml', '*.pu', '*.puml', '*.wsd' },
+    group = group,
+    pattern = pattern,
     callback = function(args)
       render_file(renderer, args.file)
     end,
-    group = group,
   })
 end
 
 local function create_user_command(renderer)
-  local function match_extension(file, ext)
-    return file:find(string.format('^(.+).%s$', ext))
-  end
-
   vim.api.nvim_create_user_command('PlantUMLRun', function(_)
     local file = vim.api.nvim_buf_get_name(0)
-    if
-      match_extension(file, 'iuml')
-      or match_extension(file, 'plantuml')
-      or match_extension(file, 'pu')
-      or match_extension(file, 'puml')
-      or match_extension(file, 'wsd')
-    then
-      render_file(renderer, file)
+
+    for _, ext in ipairs(file_extensions) do
+      if file:find(string.format('^(.+).%s$', ext)) then
+        render_file(renderer, file)
+        break
+      end
     end
   end, {})
 end
