@@ -54,7 +54,7 @@ local function create_autocmd(group, renderer)
 end
 
 local function create_user_command(renderer)
-  vim.api.nvim_create_user_command('PlantUMLRun', function(_)
+  vim.api.nvim_create_user_command('PlantUML', function(_)
     local file = vim.api.nvim_buf_get_name(0)
 
     for _, ext in ipairs(file_extensions) do
