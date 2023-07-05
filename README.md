@@ -66,6 +66,7 @@ The default values are:
       split_cmd = 'vsplit', -- Allowed values: `split`, `vsplit`.
     }
   },
+  render_on_write = true, -- Set to false to disable auto-rendering.
 }
 ```
 
@@ -82,6 +83,7 @@ Defaults for the *image* renderer:
       dark_mode = true,
     }
   },
+  render_on_write = true,
 }
 ```
 
@@ -95,6 +97,7 @@ Defaults for the *imv* renderer:
       dark_mode = true,
     }
   },
+  render_on_write = true,
 }
 ```
 

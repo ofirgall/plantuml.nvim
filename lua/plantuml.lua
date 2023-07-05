@@ -71,16 +71,19 @@ function M.setup(config)
     renderer = {
       type = 'text',
     },
+    render_on_write = true,
   }
 
   config = utils.merge_tables(default_config, config)
 
-  local group = vim.api.nvim_create_augroup('PlantUMLGroup', {})
-
   local renderer = create_renderer(config.renderer)
   if renderer then
-    create_autocmd(group, renderer)
     create_user_command(renderer)
+
+    if config.render_on_write then
+      local group = vim.api.nvim_create_augroup('PlantUMLGroup', {})
+      create_autocmd(group, renderer)
+    end
   end
 end
 
