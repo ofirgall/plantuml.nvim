@@ -69,7 +69,7 @@ end
 function M.setup(config)
   local default_config = {
     renderer = {
-      type = 'imv',
+      type = 'text',
     },
   }
 
