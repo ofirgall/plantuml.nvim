@@ -3,8 +3,22 @@ local utils = require('plantuml.utils')
 
 local M = {}
 
+-- Image renderer options.
+---@class image.Options
+---@field prog string
+---@field dark_mode boolean
+
+-- A generic image renderer.
+---@class image.Renderer
+---@field prog string
+---@field dark_mode boolean
+---@field tmp_file string
+---@field started boolean
 M.Renderer = {}
 
+-- Creates a new instance with the provided options.
+---@param options image.Options
+---@return image.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ prog = 'feh', dark_mode = true }, options)
 
@@ -17,14 +31,20 @@ function M.Renderer:new(options)
   }, self)
 end
 
+-- Renders a PlantUML file as an image using the provided program.
+---@param file string
+---@return nil
 function M.Renderer:render(file)
   plantuml.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
-    self:_start_viewer()
+    self:start_viewer()
   end)
 end
 
-function M.Renderer:_start_viewer()
-  -- Only start feh if it wasn't already started.
+--- Starts the image viewer program.
+---@private
+---@return nil
+function M.Renderer:start_viewer()
+  -- Only start the viewer if it wasn't already started.
   if not self.started then
     local cmd = string.format('%s %s', self.prog, self.tmp_file)
     utils.Runner:new(cmd, {}):run(function(_)

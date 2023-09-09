@@ -1,16 +1,31 @@
 local M = {}
 
+--- Merges two or more map-like tables.
+---@param dst table
+---@param src? table
+---@return table
 function M.merge_tables(dst, src)
   return vim.tbl_extend('force', dst, src or {})
 end
 
+-- A command runner.
+---@class utils.Runner
+---@field cmd string
+---@field codes { [number]: boolean }
 M.Runner = {}
 
+--- Creates a new instance with the command and allowed exit codes.
+---@param cmd string
+---@param codes? { [number]: boolean }
+---@return utils.Runner
 function M.Runner:new(cmd, codes)
   self.__index = self
   return setmetatable({ cmd = cmd, codes = codes or { [0] = true } }, self)
 end
 
+--- Runs the command optionally calling on_success with stdout.
+---@param on_success? fun(stdout: string[]): nil
+---@return number
 function M.Runner:run(on_success)
   local stderr
   local stdout

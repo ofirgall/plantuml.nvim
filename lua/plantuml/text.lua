@@ -3,8 +3,20 @@ local utils = require('plantuml.utils')
 
 local M = {}
 
+-- Text renderer options.
+---@class text.Options
+---@field split_cmd string
+
+-- A text renderer.
+---@class text.Renderer
+---@field buf number
+---@field win number
+---@field split_cmd string
 M.Renderer = {}
 
+-- Creates a new instance with the provided options.
+---@param options text.Options
+---@return text.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ split_cmd = 'vsplit' }, options)
 
@@ -15,18 +27,28 @@ function M.Renderer:new(options)
   return setmetatable({ buf = buf, win = nil, split_cmd = options.split_cmd }, self)
 end
 
+-- Renders a PlantUML file as text using a Neovim buffer.
+---@param file string
+---@return nil
 function M.Renderer:render(file)
   plantuml.create_text_runner(file):run(function(output)
-    self:_write_output(output)
-    self:_create_split()
+    self:write_output(output)
+    self:create_split()
   end)
 end
 
-function M.Renderer:_write_output(output)
+--- Writes the output to the buffer.
+---@private
+---@param output string[]
+---@return nil
+function M.Renderer:write_output(output)
   vim.api.nvim_buf_set_lines(self.buf, 0, -1, true, output)
 end
 
-function M.Renderer:_create_split()
+--- Creates a split for displaying the output.
+---@private
+---@return nil
+function M.Renderer:create_split()
   -- Only create the window if it wasn't already created.
   if not (self.win and vim.api.nvim_win_is_valid(self.win)) then
     vim.cmd(self.split_cmd)
