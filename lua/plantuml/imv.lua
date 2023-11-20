@@ -5,7 +5,7 @@ local M = {}
 
 -- imv image renderer options.
 ---@class imv.Options
----@field dark_mode boolean
+---@field dark_mode? boolean
 
 -- An imv's image renderer.
 ---@class imv.Renderer
@@ -15,7 +15,7 @@ local M = {}
 M.Renderer = {}
 
 -- Creates a new instance with the provided options.
----@param options imv.Options
+---@param options? imv.Options
 ---@return imv.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ dark_mode = true }, options)

@@ -5,7 +5,7 @@ local M = {}
 
 -- Text renderer options.
 ---@class text.Options
----@field split_cmd string
+---@field split_cmd? string
 
 -- A text renderer.
 ---@class text.Renderer
@@ -15,7 +15,7 @@ local M = {}
 M.Renderer = {}
 
 -- Creates a new instance with the provided options.
----@param options text.Options
+---@param options? text.Options
 ---@return text.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ split_cmd = 'vsplit' }, options)
@@ -51,7 +51,7 @@ end
 function M.Renderer:create_split()
   -- Only create the window if it wasn't already created.
   if not (self.win and vim.api.nvim_win_is_valid(self.win)) then
-    vim.cmd(self.split_cmd)
+    vim.api.nvim_command(self.split_cmd)
     self.win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_buf(self.win, self.buf)
   end

@@ -5,8 +5,8 @@ local M = {}
 
 -- Image renderer options.
 ---@class image.Options
----@field prog string
----@field dark_mode boolean
+---@field prog? string
+---@field dark_mode? boolean
 
 -- A generic image renderer.
 ---@class image.Renderer
@@ -17,7 +17,7 @@ local M = {}
 M.Renderer = {}
 
 -- Creates a new instance with the provided options.
----@param options image.Options
+---@param options? image.Options
 ---@return image.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ prog = 'feh', dark_mode = true }, options)
