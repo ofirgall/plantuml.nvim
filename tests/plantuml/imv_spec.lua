@@ -14,11 +14,7 @@ describe('Test Renderer', function()
     before_each(function()
       -- Apparently, busted/luassert cannot patch vim.fn.
       vim_fn = vim.fn
-      vim.fn = {
-        tempname = function()
-          return test_tmp_file
-        end,
-      }
+      vim.fn = { tempname = function() return test_tmp_file end }
     end)
 
     after_each(function()
@@ -50,11 +46,7 @@ describe('Test Renderer', function()
     before_each(function()
       -- Apparently, busted/luassert cannot patch vim.fn.
       vim_fn = vim.fn
-      vim.fn = {
-        tempname = function()
-          return test_tmp_file
-        end,
-      }
+      vim.fn = { tempname = function() return test_tmp_file end }
 
       runner_mock = mock(utils.Runner, true)
       runner_mock.new.returns(runner_mock)

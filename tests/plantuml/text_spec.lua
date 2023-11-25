@@ -94,8 +94,8 @@ describe('Test Renderer', function()
       renderer:render('filename')
 
       assert
-          .stub(vim_api_mock.nvim_buf_set_lines)
-          .was_called_with(test_buf, 0, -1, true, test_lines)
+        .stub(vim_api_mock.nvim_buf_set_lines)
+        .was_called_with(test_buf, 0, -1, true, test_lines)
       assert.stub(vim_api_mock.nvim_command).was_called_with(renderer.split_cmd)
       assert.equals(test_win, renderer.win)
       assert.stub(vim_api_mock.nvim_win_set_buf).was_called_with(test_win, test_buf)
@@ -113,8 +113,8 @@ describe('Test Renderer', function()
       renderer:render('filename')
 
       assert
-          .stub(vim_api_mock.nvim_buf_set_lines)
-          .was_called_with(test_buf, 0, -1, true, test_lines)
+        .stub(vim_api_mock.nvim_buf_set_lines)
+        .was_called_with(test_buf, 0, -1, true, test_lines)
       assert.stub(vim_api_mock.nvim_win_is_valid).was_called_with(test_win)
       assert.stub(vim_api_mock.nvim_command).was_called_with(renderer.split_cmd)
       assert.equals(test_win, renderer.win)

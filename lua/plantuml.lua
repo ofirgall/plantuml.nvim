@@ -98,9 +98,7 @@ end
 ---@return nil
 function M.setup(config)
   local default_config = {
-    renderer = {
-      type = 'text',
-    },
+    renderer = { type = 'text' },
     render_on_write = true,
   }
 
