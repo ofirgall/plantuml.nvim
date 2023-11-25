@@ -3,12 +3,10 @@ local utils = require('plantuml.utils')
 
 local M = {}
 
--- Image renderer options.
----@class image.Options
+---@class image.RendererOptions
 ---@field prog? string
 ---@field dark_mode? boolean
 
--- A generic image renderer.
 ---@class image.Renderer
 ---@field prog string
 ---@field dark_mode boolean
@@ -16,8 +14,7 @@ local M = {}
 ---@field started boolean
 M.Renderer = {}
 
--- Creates a new instance with the provided options.
----@param options? image.Options
+---@param options? image.RendererOptions
 ---@return image.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ prog = 'feh', dark_mode = true }, options)
@@ -31,7 +28,6 @@ function M.Renderer:new(options)
   }, self)
 end
 
--- Renders a PlantUML file as an image using the provided program.
 ---@param file string
 ---@return nil
 function M.Renderer:render(file)
@@ -40,7 +36,6 @@ function M.Renderer:render(file)
   end)
 end
 
---- Starts the image viewer program.
 ---@private
 ---@return nil
 function M.Renderer:start_viewer()

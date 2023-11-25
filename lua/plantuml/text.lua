@@ -3,8 +3,7 @@ local utils = require('plantuml.utils')
 
 local M = {}
 
--- Text renderer options.
----@class text.Options
+---@class text.RendererOptions
 ---@field split_cmd? string
 
 -- A text renderer.
@@ -15,7 +14,7 @@ local M = {}
 M.Renderer = {}
 
 -- Creates a new instance with the provided options.
----@param options? text.Options
+---@param options? text.RendererOptions
 ---@return text.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ split_cmd = 'vsplit' }, options)

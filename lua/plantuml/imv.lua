@@ -3,19 +3,16 @@ local utils = require('plantuml.utils')
 
 local M = {}
 
--- imv image renderer options.
----@class imv.Options
+---@class imv.RendererOptions
 ---@field dark_mode? boolean
 
--- An imv's image renderer.
 ---@class imv.Renderer
 ---@field dark_mode boolean
 ---@field tmp_file string
 ---@field pid number
 M.Renderer = {}
 
--- Creates a new instance with the provided options.
----@param options? imv.Options
+---@param options? imv.RendererOptions
 ---@return imv.Renderer
 function M.Renderer:new(options)
   options = utils.merge_tables({ dark_mode = true }, options)
@@ -28,7 +25,6 @@ function M.Renderer:new(options)
   }, self)
 end
 
--- Renders a PlantUML file as an image using imv.
 ---@param file string
 ---@return nil
 function M.Renderer:render(file)
@@ -38,7 +34,6 @@ function M.Renderer:render(file)
   self:refresh_image(file)
 end
 
---- Starts the imv server.
 ---@private
 ---@return nil
 function M.Renderer:start_server()
@@ -51,7 +46,6 @@ function M.Renderer:start_server()
   end
 end
 
---- Refreshes the image by using imv's IPC mechanism.
 ---@private
 ---@param file string
 ---@return nil
