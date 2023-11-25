@@ -15,13 +15,13 @@ local file_extensions = {
 
 -- Plugin options.
 ---@class plantuml.Options
----@field renderer plantuml.RendererOptions?
----@field render_on_write boolean?
+---@field renderer? plantuml.RendererOptions
+---@field render_on_write? boolean
 
 -- Renderer options.
 ---@class plantuml.RendererOptions
----@field type string?
----@field options text.Options|image.Options|imv.Options?
+---@field type? string
+---@field options? text.Options|image.Options|imv.Options
 
 --- A PlantUML renderer.
 ---@alias plantuml.Renderer { render: fun(file: string): nil }
