@@ -1,7 +1,9 @@
 #!/bin/sh
 set -eu
 
-minimal_init=$(dirname "${0}")/../tests/minimal.lua
+src_dir=$(dirname "${0}")/..
+
+minimal_init=${src_dir}/tests/minimal.lua
 
 nvim \
     --headless \
