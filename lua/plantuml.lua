@@ -27,7 +27,7 @@ local file_extensions = {
 ---@param file string
 ---@return nil
 local function render_file(renderer, file)
-  local status, result = pcall(renderer.render, renderer, file)
+  local status, result = pcall(renderer.render, renderer, vim.fn.shellescape(file))
   if not status then
     print(string.format('[plantuml.nvim] Failed to render file "%s"\n%s', file, result))
   end

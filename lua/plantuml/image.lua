@@ -21,7 +21,7 @@ function M.Renderer:new(options)
 
   self.__index = self
   return setmetatable({
-    prog = options.prog,
+    prog = vim.fn.shellescape(options.prog),
     dark_mode = options.dark_mode,
     tmp_file = vim.fn.tempname(),
     started = false,
