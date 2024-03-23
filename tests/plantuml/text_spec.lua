@@ -4,7 +4,7 @@ local mock = require('luassert.mock')
 local job = require('plantuml.job')
 local text = require('plantuml.text')
 
-describe('Test Renderer', function()
+describe('text.Renderer', function()
   local test_buf = 1
   local test_win = 2
   local test_lines = { 'data' }

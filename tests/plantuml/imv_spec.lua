@@ -5,7 +5,7 @@ local imv = require('plantuml.imv')
 local job = require('plantuml.job')
 local utils = require('tests.plantuml.utils')
 
-describe('Test Renderer', function()
+describe('imv.Renderer', function()
   local test_tmp_file = 'tmp-file'
 
   describe('new', function()
