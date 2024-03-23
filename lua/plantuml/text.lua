@@ -1,5 +1,5 @@
-local plantuml = require('plantuml.plantuml')
-local utils = require('plantuml.utils')
+local common = require('plantuml.common')
+local config = require('plantuml.config')
 
 local M = {}
 
@@ -17,7 +17,7 @@ M.Renderer = {}
 ---@param options? text.RendererOptions
 ---@return text.Renderer
 function M.Renderer:new(options)
-  options = utils.merge_tables({ split_cmd = 'vsplit' }, options)
+  options = config.merge({ split_cmd = 'vsplit' }, options)
 
   local buf = vim.api.nvim_create_buf(false, true)
   assert(buf ~= 0, string.format('create buffer'))
@@ -30,7 +30,7 @@ end
 ---@param file string
 ---@return nil
 function M.Renderer:render(file)
-  plantuml.create_text_runner(file):run(function(output)
+  common.create_text_runner(file):run(function(output)
     self:write_output(output)
     self:create_split()
   end)

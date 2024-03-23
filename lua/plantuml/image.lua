@@ -1,5 +1,6 @@
-local plantuml = require('plantuml.plantuml')
-local utils = require('plantuml.utils')
+local common = require('plantuml.common')
+local config = require('plantuml.config')
+local job = require('plantuml.job')
 
 local M = {}
 
@@ -17,7 +18,7 @@ M.Renderer = {}
 ---@param options? image.RendererOptions
 ---@return image.Renderer
 function M.Renderer:new(options)
-  options = utils.merge_tables({ prog = 'feh', dark_mode = true }, options)
+  options = config.merge({ prog = 'feh', dark_mode = true }, options)
 
   self.__index = self
   return setmetatable({
@@ -31,7 +32,7 @@ end
 ---@param file string
 ---@return nil
 function M.Renderer:render(file)
-  plantuml.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
+  common.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
     self:start_viewer()
   end)
 end
@@ -42,7 +43,7 @@ function M.Renderer:start_viewer()
   -- Only start the viewer if it wasn't already started.
   if not self.started then
     local cmd = string.format('%s %s', self.prog, self.tmp_file)
-    utils.Runner:new(cmd, {}):run(function(_)
+    job.Runner:new(cmd, {}):run(function(_)
       self.started = false
     end)
     self.started = true

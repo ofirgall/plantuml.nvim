@@ -1,7 +1,7 @@
 local image = require('plantuml.image')
 local imv = require('plantuml.imv')
+local merge_config = require('plantuml.config').merge
 local text = require('plantuml.text')
-local utils = require('plantuml.utils')
 
 local M = {}
 
@@ -94,7 +94,7 @@ function M.setup(config)
     render_on_write = true,
   }
 
-  config = utils.merge_tables(default_config, config)
+  config = merge_config(default_config, config)
 
   local renderer = create_renderer(config.renderer)
   if renderer then

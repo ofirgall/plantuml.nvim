@@ -2,8 +2,8 @@ local assert = require('luassert.assert')
 local mock = require('luassert.mock')
 
 local imv = require('plantuml.imv')
-local test_utils = require('tests.plantuml.utils')
-local utils = require('plantuml.utils')
+local job = require('plantuml.job')
+local utils = require('tests.plantuml.utils')
 
 describe('Test Renderer', function()
   local test_tmp_file = 'tmp-file'
@@ -48,7 +48,7 @@ describe('Test Renderer', function()
       vim_fn = vim.fn
       vim.fn = { tempname = function() return test_tmp_file end }
 
-      runner_mock = mock(utils.Runner, true)
+      runner_mock = mock(job.Runner, true)
       runner_mock.new.returns(runner_mock)
 
       renderer = imv.Renderer:new()
@@ -69,7 +69,7 @@ describe('Test Renderer', function()
     end
 
     it('should forward server run error', function()
-      local cb_tracker = test_utils.CallbackTracker:new(0, 'test error')
+      local cb_tracker = utils.CallbackTracker:new(0, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
@@ -79,7 +79,7 @@ describe('Test Renderer', function()
     end)
 
     it('should forward plantuml run error', function()
-      local cb_tracker = test_utils.CallbackTracker:new(1, 'test error')
+      local cb_tracker = utils.CallbackTracker:new(1, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
@@ -89,7 +89,7 @@ describe('Test Renderer', function()
     end)
 
     it('should forward close run error', function()
-      local cb_tracker = test_utils.CallbackTracker:new(2, 'test error')
+      local cb_tracker = utils.CallbackTracker:new(2, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
@@ -99,7 +99,7 @@ describe('Test Renderer', function()
     end)
 
     it('should forward open run error', function()
-      local cb_tracker = test_utils.CallbackTracker:new(3, 'test error')
+      local cb_tracker = utils.CallbackTracker:new(3, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
@@ -109,7 +109,7 @@ describe('Test Renderer', function()
     end)
 
     it('should render succesfully', function()
-      local cb_tracker = test_utils.CallbackTracker:new()
+      local cb_tracker = utils.CallbackTracker:new()
       mock_run_error(cb_tracker)
 
       renderer:render('filename')

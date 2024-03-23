@@ -1,8 +1,8 @@
 local assert = require('luassert.assert')
 local mock = require('luassert.mock')
 
+local job = require('plantuml.job')
 local text = require('plantuml.text')
-local utils = require('plantuml.utils')
 
 describe('Test Renderer', function()
   local test_buf = 1
@@ -44,7 +44,7 @@ describe('Test Renderer', function()
     local renderer
 
     before_each(function()
-      runner_mock = mock(utils.Runner, true)
+      runner_mock = mock(job.Runner, true)
       runner_mock.new.returns(runner_mock)
 
       vim_api_mock = mock(vim.api, true)
