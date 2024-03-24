@@ -79,7 +79,7 @@ describe('imv.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:assert_each_call()
+      cb_tracker:assert_all_have_error()
       assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(1, renderer.pid)
     end)
@@ -90,7 +90,7 @@ describe('imv.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:assert_calls()
+      cb_tracker:assert_one_has_error()
       assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
@@ -101,7 +101,7 @@ describe('imv.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:assert_calls()
+      cb_tracker:assert_one_has_error()
       assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
@@ -112,7 +112,7 @@ describe('imv.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:assert_calls()
+      cb_tracker:assert_one_has_error()
       assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
@@ -123,7 +123,7 @@ describe('imv.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:invoke_calls()
+      cb_tracker:invoke_all()
       assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)

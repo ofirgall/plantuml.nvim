@@ -3,7 +3,7 @@ local job = require('plantuml.job')
 local M = {}
 
 ---@type { [number]: boolean }
-local success_codes = { [0] = true, [200] = true }
+local success_exit_codes = { [0] = true, [200] = true }
 
 ---@param file string
 ---@param tmp_file string
@@ -17,7 +17,7 @@ function M.create_image_runner(file, tmp_file, dark_mode)
       vim.fn.shellescape(file),
       tmp_file
     ),
-    success_codes
+    success_exit_codes
   )
 end
 
@@ -29,7 +29,7 @@ function M.create_text_runner(file)
       'plantuml -pipe -tutxt < %s',
       vim.fn.shellescape(file)
     ),
-    success_codes
+    success_exit_codes
   )
 end
 

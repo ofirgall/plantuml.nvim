@@ -2,67 +2,59 @@ local assert = require('luassert.assert')
 
 local M = {}
 
--- A callback tracker user for testing.
 ---@class utils.CallbackTracker
----@field calls function[]
+---@field callbacks function[]
 ---@field total_calls number
 ---@field err string
 M.CallbackTracker = {}
 
--- Creates a new instance.
 ---@param total_calls? number
 ---@param err? string
 ---@return utils.CallbackTracker
 function M.CallbackTracker:new(total_calls, err)
   self.__index = self
   return setmetatable({
-    calls = {},
+    callbacks = {},
     total_calls = total_calls,
     err = err,
   }, self)
 end
 
--- Tracks a new callback.
--- Defers the callback's execution by inserting it into `calls`.
--- It will insert an error call if `call_nr` is greater than `total_calls`.
--- It's ideal for using inside luassert's `invokes`.
 ---@param call_nr number
----@param func function
+---@param callback function
 ---@return nil
-function M.CallbackTracker:track(call_nr, func)
+function M.CallbackTracker:track(call_nr, callback)
+  -- Defer the callback's execution by inserting it into `calls`.
   if self.err and call_nr > self.total_calls then
-    table.insert(self.calls, function()
+    table.insert(self.callbacks, function()
       error(self.err)
     end)
   else
-    table.insert(self.calls, func)
+    table.insert(self.callbacks, callback)
   end
 end
 
--- Invokes all the stored callbacks.
 ---@return nil
-function M.CallbackTracker:invoke_calls()
-  for _, call in ipairs(self.calls) do
-    call()
+function M.CallbackTracker:invoke_all()
+  for _, callback in ipairs(self.callbacks) do
+    callback()
   end
 end
 
--- Asserts exactly one error is thrown from invoking the callbacks.
 ---@return nil
-function M.CallbackTracker:assert_calls()
+function M.CallbackTracker:assert_one_has_error()
   assert.has_error(function()
-    for _, call in ipairs(self.calls) do
-      call()
+    for _, callback in ipairs(self.callbacks) do
+      callback()
     end
   end, self.err)
 end
 
--- Asserts every callback throws an error.
 ---@return nil
-function M.CallbackTracker:assert_each_call()
-  for _, call in ipairs(self.calls) do
+function M.CallbackTracker:assert_all_have_error()
+  for _, callback in ipairs(self.callbacks) do
     assert.has_error(function()
-      call()
+      callback()
     end, self.err)
   end
 end

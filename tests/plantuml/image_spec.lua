@@ -89,7 +89,7 @@ describe('image.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:assert_calls()
+      cb_tracker:assert_one_has_error()
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(false, renderer.started)
     end)
@@ -100,7 +100,7 @@ describe('image.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:assert_calls()
+      cb_tracker:assert_one_has_error()
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(true, renderer.started)
     end)
@@ -111,7 +111,7 @@ describe('image.Renderer', function()
 
       renderer:render('filename')
 
-      cb_tracker:invoke_calls()
+      cb_tracker:invoke_all()
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(false, renderer.started)
     end)

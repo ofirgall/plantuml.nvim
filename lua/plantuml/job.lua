@@ -2,15 +2,15 @@ local M = {}
 
 ---@class job.Runner
 ---@field cmd string
----@field codes { [number]: boolean }
+---@field exit_codes { [number]: boolean }
 M.Runner = {}
 
 ---@param cmd string
----@param codes? { [number]: boolean }
+---@param exit_codes? { [number]: boolean }
 ---@return job.Runner
-function M.Runner:new(cmd, codes)
+function M.Runner:new(cmd, exit_codes)
   self.__index = self
-  return setmetatable({ cmd = cmd, codes = codes or { [0] = true } }, self)
+  return setmetatable({ cmd = cmd, exit_codes = exit_codes or { [0] = true } }, self)
 end
 
 ---@param on_success? fun(stdout: string[]): nil
@@ -22,7 +22,7 @@ function M.Runner:run(on_success)
   local id = vim.fn.jobstart(self.cmd, {
     detach = true,
     on_exit = function(_, code, _)
-      if next(self.codes) ~= nil and not self.codes[code] then
+      if next(self.exit_codes) ~= nil and not self.exit_codes[code] then
         local msg = table.concat(stderr)
         error(string.format('exit job for command "%s"\n%s\ncode: %d', self.cmd, msg, code))
       end
