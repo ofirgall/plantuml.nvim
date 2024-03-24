@@ -39,6 +39,8 @@ describe('text.Renderer', function()
   end)
 
   describe('render', function()
+    local plantuml_cmd = "plantuml -pipe -tutxt < 'filename'"
+
     local runner_mock
     local vim_api_mock
     local renderer
@@ -66,6 +68,8 @@ describe('text.Renderer', function()
       assert.has_error(function()
         renderer:render('filename')
       end, 'test error')
+
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
     end)
 
     it('should forward invalid split command error', function()
@@ -82,6 +86,8 @@ describe('text.Renderer', function()
       assert.has_error(function()
         renderer:render('filename')
       end, 'test error')
+
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
     end)
 
     it('should render succesfully', function()
@@ -93,9 +99,12 @@ describe('text.Renderer', function()
 
       renderer:render('filename')
 
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
+
       assert
         .stub(vim_api_mock.nvim_buf_set_lines)
         .was_called_with(test_buf, 0, -1, true, test_lines)
+
       assert.stub(vim_api_mock.nvim_command).was_called_with(renderer.split_cmd)
       assert.equals(test_win, renderer.win)
       assert.stub(vim_api_mock.nvim_win_set_buf).was_called_with(test_win, test_buf)
@@ -112,9 +121,13 @@ describe('text.Renderer', function()
       renderer:render('filename')
       renderer:render('filename')
 
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
+
       assert
         .stub(vim_api_mock.nvim_buf_set_lines)
         .was_called_with(test_buf, 0, -1, true, test_lines)
+
       assert.stub(vim_api_mock.nvim_win_is_valid).was_called_with(test_win)
       assert.stub(vim_api_mock.nvim_command).was_called_with(renderer.split_cmd)
       assert.equals(test_win, renderer.win)

@@ -39,6 +39,8 @@ describe('imv.Renderer', function()
   end)
 
   describe('render', function()
+    local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
+
     local vim_fn
     local runner_mock
     local renderer
@@ -46,7 +48,10 @@ describe('imv.Renderer', function()
     before_each(function()
       -- Apparently, busted/luassert cannot patch vim.fn.
       vim_fn = vim.fn
-      vim.fn = { tempname = function() return test_tmp_file end }
+      vim.fn = {
+        tempname = function() return test_tmp_file end,
+        shellescape = vim.fn.shellescape,
+      }
 
       runner_mock = mock(job.Runner, true)
       runner_mock.new.returns(runner_mock)
@@ -68,13 +73,14 @@ describe('imv.Renderer', function()
       end)
     end
 
-    it('should forward server run error', function()
+    it('should forward imv server run error', function()
       local cb_tracker = utils.CallbackTracker:new(0, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
 
       cb_tracker:assert_each_call()
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(1, renderer.pid)
     end)
 
@@ -85,26 +91,29 @@ describe('imv.Renderer', function()
       renderer:render('filename')
 
       cb_tracker:assert_calls()
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
 
-    it('should forward close run error', function()
+    it('should forward imv close run error', function()
       local cb_tracker = utils.CallbackTracker:new(2, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
 
       cb_tracker:assert_calls()
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
 
-    it('should forward open run error', function()
+    it('should forward imv open run error', function()
       local cb_tracker = utils.CallbackTracker:new(3, 'test error')
       mock_run_error(cb_tracker)
 
       renderer:render('filename')
 
       cb_tracker:assert_calls()
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
 
@@ -115,6 +124,7 @@ describe('imv.Renderer', function()
       renderer:render('filename')
 
       cb_tracker:invoke_calls()
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(0, renderer.pid)
     end)
   end)

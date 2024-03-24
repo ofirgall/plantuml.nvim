@@ -50,6 +50,8 @@ describe('image.Renderer', function()
   end)
 
   describe('render', function()
+    local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
+
     local vim_fn
     local runner_mock
     local renderer
@@ -57,7 +59,10 @@ describe('image.Renderer', function()
     before_each(function()
       -- Apparently, busted/luassert cannot patch vim.fn.
       vim_fn = vim.fn
-      vim.fn = { tempname = function() return test_tmp_file end }
+      vim.fn = {
+        tempname = function() return test_tmp_file end,
+        shellescape = vim.fn.shellescape,
+      }
 
       runner_mock = mock(job.Runner, true)
       runner_mock.new.returns(runner_mock)
@@ -85,6 +90,7 @@ describe('image.Renderer', function()
       renderer:render('filename')
 
       cb_tracker:assert_calls()
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(false, renderer.started)
     end)
 
@@ -95,6 +101,7 @@ describe('image.Renderer', function()
       renderer:render('filename')
 
       cb_tracker:assert_calls()
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(true, renderer.started)
     end)
 
@@ -105,6 +112,7 @@ describe('image.Renderer', function()
       renderer:render('filename')
 
       cb_tracker:invoke_calls()
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(false, renderer.started)
     end)
   end)
