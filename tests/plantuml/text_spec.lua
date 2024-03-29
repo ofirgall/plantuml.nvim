@@ -39,6 +39,7 @@ describe('text.Renderer', function()
   end)
 
   describe('render', function()
+    local error_msg = 'test error'
     local plantuml_cmd = "plantuml -pipe -tutxt < 'filename'"
 
     local runner_mock
@@ -61,40 +62,23 @@ describe('text.Renderer', function()
     end)
 
     it('should forward plantuml run error', function()
-      runner_mock.run.invokes(function(_, _)
-        error('test error')
-      end)
+      runner_mock.run.invokes(function(_, _) error(error_msg) end)
 
-      assert.has_error(function()
-        renderer:render('filename')
-      end, 'test error')
-
+      assert.has_error(function() renderer:render('filename') end, error_msg)
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
     end)
 
     it('should forward invalid split command error', function()
-      runner_mock.run.invokes(function(_, on_success)
-        on_success(test_lines)
-      end)
-
+      runner_mock.run.invokes(function(_, on_success) on_success(test_lines) end)
       vim_api_mock.nvim_get_current_win.returns(test_win)
+      vim_api_mock.nvim_command.invokes(function(_) error(error_msg) end)
 
-      vim_api_mock.nvim_command.invokes(function(_)
-        error('test error')
-      end)
-
-      assert.has_error(function()
-        renderer:render('filename')
-      end, 'test error')
-
+      assert.has_error(function() renderer:render('filename') end, error_msg)
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
     end)
 
     it('should render succesfully', function()
-      runner_mock.run.invokes(function(_, on_success)
-        on_success(test_lines)
-      end)
-
+      runner_mock.run.invokes(function(_, on_success) on_success(test_lines) end)
       vim_api_mock.nvim_get_current_win.returns(test_win)
 
       renderer:render('filename')
@@ -111,10 +95,7 @@ describe('text.Renderer', function()
     end)
 
     it('should render twice succesfully', function()
-      runner_mock.run.invokes(function(_, on_success)
-        on_success(test_lines)
-      end)
-
+      runner_mock.run.invokes(function(_, on_success) on_success(test_lines) end)
       vim_api_mock.nvim_win_is_valid.returns(true)
       vim_api_mock.nvim_get_current_win.returns(test_win)
 

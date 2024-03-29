@@ -39,8 +39,6 @@ describe('imv.Renderer', function()
   end)
 
   describe('render', function()
-    local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
-
     local vim_fn
     local runner_mock
     local renderer
@@ -64,68 +62,51 @@ describe('imv.Renderer', function()
       vim.fn = vim_fn
     end)
 
-    ---@param cb_tracker utils.CallbackTracker
+    ---@param expected_pid number
+    ---@param call_nr? number
     ---@return nil
-    local function mock_run_error(cb_tracker)
+    local function test_render_callbacks(expected_pid, call_nr)
+      local tracker = utils.CallbackTracker:new(call_nr)
+
       runner_mock.run.invokes(function(rmock, on_success)
-        cb_tracker:track(#rmock.run.calls, on_success)
+        tracker:track(#rmock.run.calls, on_success)
         return 1
       end)
+
+      renderer:render('filename')
+
+      tracker:invoke_all()
+
+      local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
+      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
+      assert.equals(expected_pid, renderer.pid)
     end
 
-    it('should forward imv server run error', function()
-      local cb_tracker = utils.CallbackTracker:new(0, 'test error')
-      mock_run_error(cb_tracker)
-
-      renderer:render('filename')
-
-      cb_tracker:assert_all_have_error()
-      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
-      assert.equals(1, renderer.pid)
-    end)
-
-    it('should forward plantuml run error', function()
-      local cb_tracker = utils.CallbackTracker:new(1, 'test error')
-      mock_run_error(cb_tracker)
-
-      renderer:render('filename')
-
-      cb_tracker:assert_one_has_error()
-      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
+    it('should forward runner run error', function()
+      local msg = 'test error'
+      runner_mock.run.invokes(function() error(msg) end)
+      assert.has_error(function() renderer:render('filename') end, msg)
       assert.equals(0, renderer.pid)
     end)
 
-    it('should forward imv close run error', function()
-      local cb_tracker = utils.CallbackTracker:new(2, 'test error')
-      mock_run_error(cb_tracker)
-
-      renderer:render('filename')
-
-      cb_tracker:assert_one_has_error()
-      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
-      assert.equals(0, renderer.pid)
+    it('should not reset pid when imv server callback is not ran', function()
+      test_render_callbacks(1, 1)
     end)
 
-    it('should forward imv open run error', function()
-      local cb_tracker = utils.CallbackTracker:new(3, 'test error')
-      mock_run_error(cb_tracker)
-
-      renderer:render('filename')
-
-      cb_tracker:assert_one_has_error()
-      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
-      assert.equals(0, renderer.pid)
+    it('should reset pid when plantuml callback is not ran', function()
+      test_render_callbacks(0, 2)
     end)
 
-    it('should render succesfully', function()
-      local cb_tracker = utils.CallbackTracker:new()
-      mock_run_error(cb_tracker)
+    it('should reset pid when imv close callback is not ran', function()
+      test_render_callbacks(0, 3)
+    end)
 
-      renderer:render('filename')
+    it('should reset pid when imv open callback is not ran', function()
+      test_render_callbacks(0, 4)
+    end)
 
-      cb_tracker:invoke_all()
-      assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
-      assert.equals(0, renderer.pid)
+    it('should reset pid when all callbacks are ran', function()
+      test_render_callbacks(0)
     end)
   end)
 end)

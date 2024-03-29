@@ -50,8 +50,6 @@ describe('image.Renderer', function()
   end)
 
   describe('render', function()
-    local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
-
     local vim_fn
     local runner_mock
     local renderer
@@ -75,45 +73,43 @@ describe('image.Renderer', function()
       vim.fn = vim_fn
     end)
 
-    ---@param cb_tracker utils.CallbackTracker
+    ---@param expected_started boolean
+    ---@param call_nr? number
     ---@return nil
-    local function mock_run_error(cb_tracker)
+    local function test_render_callbacks(expected_started, call_nr)
+      local tracker = utils.CallbackTracker:new(call_nr)
+
       runner_mock.run.invokes(function(rmock, on_success)
-        cb_tracker:track(#rmock.run.calls, on_success)
+        tracker:track(#rmock.run.calls, on_success)
+        return 1
       end)
+
+      renderer:render('filename')
+
+      tracker:invoke_all()
+
+      local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
+      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
+      assert.equals(expected_started, renderer.started)
     end
 
-    it('should forward plantuml run error', function()
-      local cb_tracker = utils.CallbackTracker:new(0, 'test error')
-      mock_run_error(cb_tracker)
-
-      renderer:render('filename')
-
-      cb_tracker:assert_one_has_error()
-      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
+    it('should forward runner run error', function()
+      local msg = 'test error'
+      runner_mock.run.invokes(function() error(msg) end)
+      assert.has_error(function() renderer:render('filename') end, msg)
       assert.equals(false, renderer.started)
     end)
 
-    it('should forward viewer run error', function()
-      local cb_tracker = utils.CallbackTracker:new(1, 'test error')
-      mock_run_error(cb_tracker)
-
-      renderer:render('filename')
-
-      cb_tracker:assert_one_has_error()
-      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
-      assert.equals(true, renderer.started)
+    it('should not set started flag when plantuml callback is not ran', function()
+      test_render_callbacks(false, 1)
     end)
 
-    it('should render succesfully', function()
-      local cb_tracker = utils.CallbackTracker:new()
-      mock_run_error(cb_tracker)
+    it('should set started flag when viewer callback is not ran', function()
+      test_render_callbacks(true, 2)
+    end)
 
-      renderer:render('filename')
-
-      cb_tracker:invoke_all()
-      assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
-      assert.equals(false, renderer.started)
+    it('should reset started flag when all callbacks are ran', function()
+      test_render_callbacks(false)
     end)
   end)
 end)
