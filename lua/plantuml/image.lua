@@ -11,6 +11,7 @@ local M = {}
 ---@class image.Renderer
 ---@field prog string
 ---@field dark_mode boolean
+---@field format string
 ---@field tmp_file string
 ---@field started boolean
 M.Renderer = {}
@@ -18,12 +19,13 @@ M.Renderer = {}
 ---@param options? image.RendererOptions
 ---@return image.Renderer
 function M.Renderer:new(options)
-  options = config.merge({ prog = 'feh', dark_mode = true }, options)
+  options = config.merge({ prog = 'feh', dark_mode = true, format = nil }, options)
 
   self.__index = self
   return setmetatable({
     prog = options.prog,
     dark_mode = options.dark_mode,
+    format = options.format,
     tmp_file = vim.fn.tempname(),
     started = false,
   }, self)
@@ -32,7 +34,7 @@ end
 ---@param file string
 ---@return nil
 function M.Renderer:render(file)
-  common.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
+  common.create_image_runner(file, self.tmp_file, self.dark_mode, self.format):run(function(_)
     self:start_viewer()
   end)
 end

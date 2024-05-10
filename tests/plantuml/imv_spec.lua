@@ -25,14 +25,25 @@ describe('imv.Renderer', function()
       local renderer = imv.Renderer:new()
 
       assert.equals(true, renderer.dark_mode)
+      assert.equals(nil, renderer.format)
       assert.equals(test_tmp_file, renderer.tmp_file)
       assert.equals(0, renderer.pid)
     end)
 
-    it('should create the instance with custom settings', function()
+    it('should create the instance with some custom settings', function()
       local renderer = imv.Renderer:new({ dark_mode = false })
 
       assert.equals(false, renderer.dark_mode)
+      assert.equals(nil, renderer.format)
+      assert.equals(test_tmp_file, renderer.tmp_file)
+      assert.equals(0, renderer.pid)
+    end)
+
+    it('should create the instance with all custom settings', function()
+      local renderer = imv.Renderer:new({ dark_mode = false, format = 'svg' })
+
+      assert.equals(false, renderer.dark_mode)
+      assert.equals('svg', renderer.format)
       assert.equals(test_tmp_file, renderer.tmp_file)
       assert.equals(0, renderer.pid)
     end)
@@ -77,7 +88,7 @@ describe('imv.Renderer', function()
 
       tracker:invoke_all()
 
-      local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
+      local plantuml_cmd = "plantuml -darkmode  -pipe < 'filename' > tmp-file"
       assert.equals(runner_mock.new.calls[2].vals[2], plantuml_cmd)
       assert.equals(expected_pid, renderer.pid)
     end

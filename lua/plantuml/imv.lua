@@ -9,6 +9,7 @@ local M = {}
 
 ---@class imv.Renderer
 ---@field dark_mode boolean
+---@field format string
 ---@field tmp_file string
 ---@field pid number
 M.Renderer = {}
@@ -16,11 +17,12 @@ M.Renderer = {}
 ---@param options? imv.RendererOptions
 ---@return imv.Renderer
 function M.Renderer:new(options)
-  options = config.merge({ dark_mode = true }, options)
+  options = config.merge({ dark_mode = true, format = nil }, options)
 
   self.__index = self
   return setmetatable({
     dark_mode = options.dark_mode,
+    format = options.format,
     tmp_file = vim.fn.tempname(),
     pid = 0,
   }, self)
@@ -52,7 +54,7 @@ end
 ---@return nil
 function M.Renderer:refresh_image(file)
   -- 1. Run PlantUML to generate an image file from the current file.
-  common.create_image_runner(file, self.tmp_file, self.dark_mode):run(function(_)
+  common.create_image_runner(file, self.tmp_file, self.dark_mode, self.format):run(function(_)
     -- 2. Tell imv to close all previously opened files.
     local imv_close_cmd = string.format('imv-msg %d close all', self.pid)
     job.Runner:new(imv_close_cmd):run(function(_)

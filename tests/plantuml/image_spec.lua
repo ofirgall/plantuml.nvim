@@ -26,6 +26,7 @@ describe('image.Renderer', function()
 
       assert.equals('feh', renderer.prog)
       assert.equals(true, renderer.dark_mode)
+      assert.equals(nil, renderer.format)
       assert.equals(test_tmp_file, renderer.tmp_file)
       assert.equals(false, renderer.started)
     end)
@@ -35,15 +36,17 @@ describe('image.Renderer', function()
 
       assert.equals('prog', renderer.prog)
       assert.equals(true, renderer.dark_mode)
+      assert.equals(nil, renderer.format)
       assert.equals(test_tmp_file, renderer.tmp_file)
       assert.equals(false, renderer.started)
     end)
 
     it('should create the instance with all custom settings', function()
-      local renderer = image.Renderer:new({ prog = 'prog', dark_mode = false })
+      local renderer = image.Renderer:new({ prog = 'prog', dark_mode = false, format = 'svg' })
 
       assert.equals('prog', renderer.prog)
       assert.equals(false, renderer.dark_mode)
+      assert.equals('svg', renderer.format)
       assert.equals(test_tmp_file, renderer.tmp_file)
       assert.equals(false, renderer.started)
     end)
@@ -88,7 +91,7 @@ describe('image.Renderer', function()
 
       tracker:invoke_all()
 
-      local plantuml_cmd = "plantuml -darkmode -pipe < 'filename' > tmp-file"
+      local plantuml_cmd = "plantuml -darkmode  -pipe < 'filename' > tmp-file"
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(expected_started, renderer.started)
     end

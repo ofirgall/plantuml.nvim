@@ -81,6 +81,7 @@ Defaults for the *image* renderer:
     options = {
       prog = 'feh',
       dark_mode = true,
+      format = nil, -- Allowed values: `png`, `svg`
     }
   },
   render_on_write = true,
@@ -95,6 +96,7 @@ Defaults for the *imv* renderer:
     type = 'imv',
     options = {
       dark_mode = true,
+      format = nil, -- Allowed values: `png`, `svg`
     }
   },
   render_on_write = true,
