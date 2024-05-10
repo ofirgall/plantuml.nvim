@@ -63,7 +63,7 @@ The default values are:
   renderer = {
     type = 'text',
     options = {
-      split_cmd = 'vsplit', -- Allowed values: `split`, `vsplit`.
+      split_cmd = 'vsplit', -- Allowed values: 'split', 'vsplit'.
     }
   },
   render_on_write = true, -- Set to false to disable auto-rendering.
@@ -81,7 +81,7 @@ Defaults for the *image* renderer:
     options = {
       prog = 'feh',
       dark_mode = true,
-      format = nil, -- Allowed values: `png`, `svg`
+      format = nil, -- Allowed values: nil, 'png', 'svg'.
     }
   },
   render_on_write = true,
@@ -96,12 +96,14 @@ Defaults for the *imv* renderer:
     type = 'imv',
     options = {
       dark_mode = true,
-      format = nil, -- Allowed values: `png`, `svg`
+      format = nil, -- Allowed values: nil, 'png', 'svg'.
     }
   },
   render_on_write = true,
 }
 ```
+
+_Note: When `format` is `nil`, PlantUML's default format will be used._
 
 ## Usage
 
