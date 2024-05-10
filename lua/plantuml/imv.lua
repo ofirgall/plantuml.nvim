@@ -6,10 +6,11 @@ local M = {}
 
 ---@class imv.RendererOptions
 ---@field dark_mode? boolean
+---@field format? string
 
 ---@class imv.Renderer
 ---@field dark_mode boolean
----@field format string
+---@field format? string
 ---@field tmp_file string
 ---@field pid number
 M.Renderer = {}
@@ -17,7 +18,7 @@ M.Renderer = {}
 ---@param options? imv.RendererOptions
 ---@return imv.Renderer
 function M.Renderer:new(options)
-  options = config.merge({ dark_mode = true, format = nil }, options)
+  options = config.merge({ dark_mode = true }, options)
 
   self.__index = self
   return setmetatable({

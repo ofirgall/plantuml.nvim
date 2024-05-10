@@ -8,7 +8,7 @@ local success_exit_codes = { [0] = true, [200] = true }
 ---@param file string
 ---@param tmp_file string
 ---@param dark_mode boolean
----@param format string
+---@param format? string
 ---@return job.Runner
 function M.create_image_runner(file, tmp_file, dark_mode, format)
   return job.Runner:new(
