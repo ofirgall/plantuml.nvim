@@ -40,7 +40,7 @@ describe('text.Renderer', function()
 
   describe('render', function()
     local error_msg = 'test error'
-    local plantuml_cmd = "plantuml -pipe -tutxt < 'filename'"
+    local plantuml_cmd = "plantuml -tutxt -pipe < 'filename'"
 
     local runner_mock
     local vim_api_mock

@@ -91,7 +91,7 @@ describe('image.Renderer', function()
 
       tracker:invoke_all()
 
-      local plantuml_cmd = "plantuml -darkmode  -pipe < 'filename' > tmp-file"
+      local plantuml_cmd = "plantuml -darkmode -Smonochrome=reverse -pipe < 'filename' > tmp-file"
       assert.equals(runner_mock.new.calls[1].vals[2], plantuml_cmd)
       assert.equals(expected_started, renderer.started)
     end

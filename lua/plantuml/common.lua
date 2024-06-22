@@ -3,7 +3,7 @@ local job = require('plantuml.job')
 local M = {}
 
 ---@type { [number]: boolean }
-local success_exit_codes = { [0] = true, [200] = true }
+M.success_exit_codes = { [0] = true, [200] = true }
 
 ---@param file string
 ---@param tmp_file string
@@ -11,15 +11,19 @@ local success_exit_codes = { [0] = true, [200] = true }
 ---@param format? string
 ---@return job.Runner
 function M.create_image_runner(file, tmp_file, dark_mode, format)
+  local cmd_builder = {
+    'plantuml',
+    dark_mode and ' -darkmode -Smonochrome=reverse' or '',
+    format and ' -t' .. format or '',
+    ' -pipe < ',
+    vim.fn.shellescape(file),
+    ' > ',
+    tmp_file,
+  }
+
   return job.Runner:new(
-    string.format(
-      'plantuml %s %s -pipe < %s > %s',
-      dark_mode and '-darkmode' or '',
-      format and '-t' .. format or '',
-      vim.fn.shellescape(file),
-      tmp_file
-    ),
-    success_exit_codes
+    table.concat(cmd_builder),
+    M.success_exit_codes
   )
 end
 
@@ -27,11 +31,8 @@ end
 ---@return job.Runner
 function M.create_text_runner(file)
   return job.Runner:new(
-    string.format(
-      'plantuml -pipe -tutxt < %s',
-      vim.fn.shellescape(file)
-    ),
-    success_exit_codes
+    string.format('plantuml -tutxt -pipe < %s', vim.fn.shellescape(file)),
+    M.success_exit_codes
   )
 end
 
