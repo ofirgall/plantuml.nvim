@@ -7,6 +7,13 @@
     "it",
     "vim"
   ],
-  "runtime.version": "LuaJIT",
-  "workspace.checkThirdParty": false
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "workspace": {
+    "library": [
+      "$VIMRUNTIME"
+    ],
+    "checkThirdParty": false
+  }
 }
