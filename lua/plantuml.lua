@@ -26,7 +26,7 @@ local file_extensions = {
 ---@param renderer plantuml.Renderer
 ---@param file string
 ---@return nil
-local function render_file(renderer, file)
+function M.render_file(renderer, file)
   local status, result = pcall(renderer.render, renderer, file)
   if not status then
     print(string.format('[plantuml.nvim] Failed to render file "%s"\n%s', file, result))
@@ -35,7 +35,7 @@ end
 
 ---@param renderer_config table
 ---@return plantuml.Renderer?
-local function create_renderer(renderer_config)
+function M.create_renderer(renderer_config)
   local type = renderer_config.type
   local options = renderer_config.options
 
@@ -61,7 +61,7 @@ local function create_user_command(renderer)
 
     for _, ext in ipairs(file_extensions) do
       if file:find(string.format('^(.+).%s$', ext)) then
-        render_file(renderer, file)
+        M.render_file(renderer, file)
         break
       end
     end
@@ -81,7 +81,7 @@ local function create_autocmd(group, renderer)
     group = group,
     pattern = pattern,
     callback = function(args)
-      render_file(renderer, args.file)
+      M.render_file(renderer, args.file)
     end,
   })
 end
@@ -96,7 +96,7 @@ function M.setup(config)
 
   config = merge_config(default_config, config)
 
-  local renderer = create_renderer(config.renderer)
+  local renderer = M.create_renderer(config.renderer)
   if renderer then
     create_user_command(renderer)
 
